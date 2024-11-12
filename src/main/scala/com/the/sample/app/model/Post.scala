@@ -8,11 +8,7 @@ import scala.beans.BeanProperty
 @Table(name = "post")
 class Post (@BeanProperty
             @Column(name = "content", length = 500, nullable = false)
-            var content: String,
-
-            @ManyToOne
-            @JoinColumn(name = "author_id")
-            var author: Author
+            var content: String
            ) {
 
   @Id
@@ -20,5 +16,10 @@ class Post (@BeanProperty
   var id: Long = _
 
 
-  def this() = this(null, null)
+  @ManyToOne
+  @JoinColumn(name = "author_id", nullable = false)
+  var author: Author = _
+
+
+  def this() = this(null)
 }

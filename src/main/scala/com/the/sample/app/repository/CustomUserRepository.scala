@@ -19,7 +19,7 @@ class CustomUserRepository {
 
     // Create conditions
     val emailCondition = criteriaBuilder.like(root.get("email"), s"%@$domain")
-    val nameCondition = criteriaBuilder.like(root.get("fullName"), s"$startingLetter%")
+    val nameCondition = criteriaBuilder.like(root.get("username"), s"$startingLetter%")
 
     criteriaQuery.select(root).where(List(criteriaBuilder.or(List(emailCondition, nameCondition): _*)):_*)
 

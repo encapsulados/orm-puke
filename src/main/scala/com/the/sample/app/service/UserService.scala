@@ -4,6 +4,7 @@ import com.the.sample.app.model.{Author, Post}
 import com.the.sample.app.repository.{CustomUserRepository, PostRepository, UserRepository}
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import scala.jdk.CollectionConverters._
 
 trait UserService {
   def findById(id: Long): Option[Author]
@@ -16,15 +17,17 @@ trait UserService {
 
   def findByEmailDomainOrFullNameStartsWith(domain: String, startingLetter: String): List[Author]
 
-  def findPostsByAuthorId(id: Long): List[Post]
+  def findPostsByAuthorId(id: Author): List[Post]
 }
 
 @Service
 @Transactional
 class UserServiceImpl(userRepository: UserRepository,
                       postRepository: PostRepository,
-                      customUserRepository: CustomUserRepository) extends UserService{
+                      customUserRepository: CustomUserRepository) extends UserService {
+
   import scala.jdk.OptionConverters._
+
   override def findById(id: Long): Option[Author] = userRepository.findById(id).toScala
 
   override def findByEmail(email: String): Option[Author] = userRepository.findByEmail(email).toScala
@@ -36,6 +39,6 @@ class UserServiceImpl(userRepository: UserRepository,
   override def findByEmailDomainOrFullNameStartsWith(domain: String, startingLetter: String): List[Author] =
     customUserRepository.findByEmailDomainOrFullNameStartsWith(domain, startingLetter)
 
-  override def findPostsByAuthorId(id: Long): List[Post] = postRepository.findByAuthorId(id)
-}
+  override def findPostsByAuthorId(id: Author): List[Post] = postRepository.findByAuthor(id).asScala.toList
 
+}
