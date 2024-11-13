@@ -1,6 +1,6 @@
-package com.the.sample.app.repository
+package com.encapsulados.repository
 
-import com.the.sample.app.model.Author
+import com.encapsulados.model.Author
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

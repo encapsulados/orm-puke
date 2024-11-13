@@ -1,4 +1,4 @@
-package com.the.sample.app
+package com.encapsulados
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 
 
 @SpringBootApplication
-@EntityScan(basePackages = Array("com.the.sample.app"))
+@EntityScan(basePackages = Array("com.encapsulados"))
 @EnableJpaRepositories(basePackages = {
-  Array("com.the.sample.app")
+  Array("com.encapsulados")
 })
 @EnableTransactionManagement
-class SpringHibernateCrudApplication
+class OrmPukeApplication
 
-object SpringHibernateCrudApplication extends App{
-  SpringApplication.run(classOf[SpringHibernateCrudApplication])
+object OrmPukeApplication extends App {
+  SpringApplication.run(classOf[OrmPukeApplication])
 }

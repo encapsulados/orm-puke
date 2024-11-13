@@ -1,7 +1,8 @@
-package com.the.sample.app.repository
+package com.encapsulados.repository
 
-import com.the.sample.app.model.Author
+import com.encapsulados.model.Author
 import jakarta.persistence.{EntityManager, PersistenceContext}
+
 import scala.jdk.CollectionConverters._
 import jakarta.persistence.criteria._
 import org.springframework.stereotype.Repository
@@ -12,16 +13,15 @@ class CustomUserRepository {
   @PersistenceContext
   private var entityManager: EntityManager = _
 
-  def findByEmailDomainOrFullNameStartsWith(domain: String, startingLetter: String): List[Author] = {
+  def findByEmailDomain(domain: String): List[Author] = {
     val criteriaBuilder: CriteriaBuilder = entityManager.getCriteriaBuilder
     val criteriaQuery = criteriaBuilder.createQuery(classOf[Author])
     val root = criteriaQuery.from(classOf[Author])
 
     // Create conditions
     val emailCondition = criteriaBuilder.like(root.get("email"), s"%@$domain")
-    val nameCondition = criteriaBuilder.like(root.get("username"), s"$startingLetter%")
 
-    criteriaQuery.select(root).where(List(criteriaBuilder.or(List(emailCondition, nameCondition): _*)):_*)
+    criteriaQuery.select(root).where(List(criteriaBuilder.or(List(emailCondition): _*)):_*)
 
     // Execute query
     entityManager.createQuery(criteriaQuery).getResultList.asScala.toList

@@ -1,8 +1,9 @@
-package com.the.sample.app.model
+package com.encapsulados.model
 
 import jakarta.persistence._
 
 import scala.beans.BeanProperty
+import java.util
 
 @Entity(name= "Post")
 @Table(name = "post")
@@ -19,6 +20,10 @@ class Post (@BeanProperty
   @ManyToOne
   @JoinColumn(name = "author_id", nullable = false)
   var author: Author = _
+
+
+  @OneToMany(mappedBy = "post", cascade = Array(CascadeType.ALL), orphanRemoval = true)
+  var comments: util.List[Comment] = new util.ArrayList[Comment]()
 
 
   def this() = this(null)

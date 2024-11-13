@@ -1,4 +1,4 @@
-package com.the.sample.app.model
+package com.encapsulados.model
 
 import jakarta.persistence._
 import java.util
@@ -21,6 +21,12 @@ class Author(@BeanProperty
 
   @OneToMany(mappedBy = "author", cascade = Array(CascadeType.ALL), orphanRemoval = true)
   var posts: util.List[Post] = new util.ArrayList[Post]()
+
+
+
+  @OneToMany(mappedBy = "author", cascade = Array(CascadeType.ALL), orphanRemoval = true)
+  var comments: util.List[Comment] = new util.ArrayList[Comment]()
+
 
 
   def this() = this(null,null)

@@ -1,12 +1,13 @@
-package com.the.sample.app.service
+package com.encapsulados.service
 
-import com.the.sample.app.model.Post
-import com.the.sample.app.repository.PostRepository
+import com.encapsulados.model.Post
+import com.encapsulados.repository.PostRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 trait PostService {
   def save(post: Post): Unit
+  def deleteAll(): Unit
 }
 
 
@@ -14,4 +15,6 @@ trait PostService {
 @Transactional
 class PostServiceImpl(postRepository: PostRepository) extends PostService {
   override def save(post: Post): Unit = postRepository.save(post)
+
+  override def deleteAll(): Unit = postRepository.deleteAll()
 }

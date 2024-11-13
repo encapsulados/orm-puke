@@ -8,5 +8,5 @@ libraryDependencies += "com.h2database" % "h2" % "2.1.214"
 libraryDependencies += "org.springframework.boot" % "spring-boot-starter-test" % "3.0.4" % Test
 lazy val root = (project in file("."))
   .settings(
-    name := "SpringScalaHibernateCrud"
+    name := "OrmPuke"
   )
