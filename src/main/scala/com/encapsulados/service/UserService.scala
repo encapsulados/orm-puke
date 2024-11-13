@@ -8,15 +8,9 @@ import org.springframework.transaction.annotation.Transactional
 import scala.jdk.CollectionConverters._
 
 trait UserService {
-  def findById(id: Long): Option[Author]
-
-  def findByEmail(email: String): Option[Author]
-
   def save(user: Author): Unit
 
   def saveAll(authors: Author*): Unit
-
-  def deleteById(id: Long): Unit
 
   def deleteAll(): Unit
 
@@ -31,15 +25,7 @@ class UserServiceImpl(userRepository: UserRepository,
                       postRepository: PostRepository,
                       customUserRepository: CustomUserRepository) extends UserService {
 
-  import scala.jdk.OptionConverters._
-
-  override def findById(id: Long): Option[Author] = userRepository.findById(id).toScala
-
-  override def findByEmail(email: String): Option[Author] = userRepository.findByEmail(email).toScala
-
   override def save(user: Author): Unit = userRepository.save(user)
-
-  override def deleteById(id: Long): Unit = userRepository.deleteById(id)
 
   override def findByEmailDomain(domain: String): List[Author] =
     customUserRepository.findByEmailDomain(domain)

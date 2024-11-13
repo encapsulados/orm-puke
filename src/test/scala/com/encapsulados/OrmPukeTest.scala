@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.{AfterEach, Test}
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.{ContextConfiguration, TestPropertySource}
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(Array(classOf[SpringExtension]))
 @ContextConfiguration(classes = Array(classOf[OrmPukeApplication]))
-class SpringHibernateCrudApplicationTest {
+@TestPropertySource(locations = Array("classpath:application.properties"))
+class OrmPukeTest {
   @Autowired
   var userService: UserService       = null
   @Autowired
@@ -19,9 +20,16 @@ class SpringHibernateCrudApplicationTest {
   @Autowired
   var commentService: CommentService = null
 
+  @AfterEach
+  def cleanDatabase(): Unit = {
+    userService.deleteAll()
+    postService.deleteAll()
+    commentService.deleteAll()
+  }
+
   @Test
   def getAllUsersByDomain = {
-    val zeta  = new Author(username = "zeta", email = "zeta@encapsulados.io")
+    val zeta  = new Author(username = "zeta", email =  "zeta@encapsulados.io")
     val palan = new Author(username = "palan", email = "palan@encapsulados.io")
     val pedro = new Author(username = "pedro", email = "pedro@gmail.com")
     val lucas = new Author(username = "lucas", email = "lucas@gmail.com")
@@ -31,12 +39,6 @@ class SpringHibernateCrudApplicationTest {
     assertEquals(authors.size, 2)
   }
 
-  @AfterEach
-  def cleanDatabase(): Unit = {
-    userService.deleteAll()
-    postService.deleteAll()
-    commentService.deleteAll()
-  }
 
   @Test
   def authorWithPost = {
@@ -49,6 +51,7 @@ class SpringHibernateCrudApplicationTest {
     postService.save(post)
 
     assertEquals(userService.findPostsByAuthorId(zeta).size, 1)
+    assertEquals(userService.findPostsByAuthorId(zeta).head.content, "test content")
   }
 
   @Test
@@ -81,5 +84,6 @@ class SpringHibernateCrudApplicationTest {
     commentService.save(anotherComment)
 
     assertEquals(commentService.findByPost(post).size, 2)
+    assertEquals(commentService.findByPost(post).size, commentService.countByPostId(post))
   }
 }

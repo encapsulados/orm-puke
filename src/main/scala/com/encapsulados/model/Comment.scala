@@ -1,6 +1,6 @@
 package com.encapsulados.model
 
-import jakarta.persistence.{CascadeType, Column, Entity, GeneratedValue, Id, JoinColumn, ManyToOne, OneToMany, Table}
+import jakarta.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, JoinColumn, ManyToOne, OneToMany, Table}
 
 import scala.beans.BeanProperty
 import java.util
@@ -12,7 +12,7 @@ class Comment(@BeanProperty
               var text: String,
              ) {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   var id: Long = _
 

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0   # Use the MySQL version you need
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # Set your root password
+      MYSQL_DATABASE: orm_encapsulados          # Default database
+      MYSQL_USER: user                    # Non-root user
+      MYSQL_PASSWORD: user_password       # Non-root user password
+    ports:
+      - "3306:3306"  # Map MySQL port to the host
+    volumes:
+      - db_data:/var/lib/mysql  # Persistent storage for MySQL data
+
+volumes:
+  db_data:
