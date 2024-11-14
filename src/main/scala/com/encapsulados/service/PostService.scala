@@ -16,5 +16,5 @@ trait PostService {
 class PostServiceImpl(postRepository: PostRepository) extends PostService {
   override def save(post: Post): Unit = postRepository.save(post)
 
-  override def deleteAll(): Unit = postRepository.deleteAll()
+  override def deleteAll(): Unit      = postRepository.deleteAll()
 }

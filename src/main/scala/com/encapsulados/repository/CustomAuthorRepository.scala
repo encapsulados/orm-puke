@@ -8,7 +8,7 @@ import jakarta.persistence.criteria._
 import org.springframework.stereotype.Repository
 
 @Repository
-class CustomUserRepository {
+class CustomAuthorRepository {
 
   @PersistenceContext
   private var entityManager: EntityManager = _

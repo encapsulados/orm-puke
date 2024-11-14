@@ -28,6 +28,5 @@ class Author(@BeanProperty
   var comments: util.List[Comment] = new util.ArrayList[Comment]()
 
 
-
   def this() = this(null,null)
 }

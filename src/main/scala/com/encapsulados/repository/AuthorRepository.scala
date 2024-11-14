@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-trait UserRepository extends JpaRepository[Author,Long]{
-  def findByEmail(email: String): Optional[Author]
-}
+trait AuthorRepository extends JpaRepository[Author,Long]

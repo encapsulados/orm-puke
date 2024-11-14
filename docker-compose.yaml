@@ -13,6 +13,6 @@ services:
       - "3306:3306"  # Map MySQL port to the host
     volumes:
       - db_data:/var/lib/mysql  # Persistent storage for MySQL data
-
+    restart: always
 volumes:
   db_data:
