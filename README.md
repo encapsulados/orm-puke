@@ -1,1 +1,1 @@
-# SpringScalaHibernateCrud
+## 🤮 ORM Puke 🤮
