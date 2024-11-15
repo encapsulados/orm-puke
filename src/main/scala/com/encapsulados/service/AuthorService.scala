@@ -18,6 +18,8 @@ trait AuthorService {
 
   def findPostsByAuthorId(id: Author): List[Post]
 
+  def findPostsByAuthorUsername(username: String): List[Post]
+
   def findAll(): List[Author]
 }
 
@@ -38,4 +40,9 @@ class AuthorServiceImpl(userRepository: AuthorRepository,
   override def deleteAll(): Unit                               = userRepository.deleteAll()
 
   override def findAll(): List[Author]                         = userRepository.findAll().asScala.toList
+
+  override def findPostsByAuthorUsername(username: String): List[Post] = {
+    val author = userRepository.findByUsername(username)
+    postRepository.findByAuthor(author).asScala.toList
+  }
 }

@@ -12,6 +12,7 @@ trait CommentService {
   def findByPost(post: Post)           : List[Comment]
   def countByPostId(post: Post)        : Long
   def deleteAll()                      : Unit
+  def findAll()                        : List[Comment]
   def countCommentsPerPost()           : Map[Post, Long]
 }
 
@@ -27,4 +28,6 @@ class CommentServiceImpl(commentRepository: CommentRepository, customCommentRepo
   override def deleteAll(): Unit                       = commentRepository.deleteAll()
 
   override def countCommentsPerPost(): Map[Post, Long] = customCommentRepository.countCommentsPerPost()
+
+  override def findAll(): List[Comment] = commentRepository.findAll().asScala.toList
 }

@@ -1,33 +1,27 @@
 package com.encapsulados
 
+import _root_.repository.DatabaseSeeder
 import com.encapsulados.model.{Author, Comment, Post}
 import com.encapsulados.service.{AuthorService, CommentService, PostService}
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.MethodOrderer.Random
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.{AfterEach, Test}
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.{JdbcTemplate, PreparedStatementCreator}
-import org.springframework.jdbc.support.{GeneratedKeyHolder, KeyHolder}
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.{ContextConfiguration, TestPropertySource}
 
-import java.sql.{Connection, PreparedStatement}
-import scala.io.Source
 import scala.language.postfixOps
 
 @ExtendWith(Array(classOf[SpringExtension]))
 @ContextConfiguration(classes = Array(classOf[OrmPukeApplication]))
 @TestPropertySource(locations = Array("classpath:application.properties"))
-class OrmPukeTest {
+class OrmPukeTest extends DatabaseSeeder {
   @Autowired
   var userService: AuthorService      = _
   @Autowired
   var postService: PostService        = _
   @Autowired
   var commentService: CommentService  = _
-  @Autowired
-  var jdbcTemplate: JdbcTemplate      = _
 
   @AfterEach
   def cleanDatabase(): Unit = {
@@ -112,55 +106,8 @@ class OrmPukeTest {
 
   @Test
   def commentsPerPost = {
-    val authorLines     = Source.fromResource("sql/authors.csv").getLines().drop(1)
-    val postLines       = Source.fromResource("sql/posts.csv").getLines().drop(1)
-    val commentsLines   = Source.fromResource("sql/comments.csv").getLines().drop(1)
-    val r               = new scala.util.Random()
-
-    val authorIds = authorLines.map { line =>
-      val columns = line.split(",")
-      val insert = "INSERT INTO author (email, username) VALUES (?, ?)"
-
-      val keyHolder: KeyHolder = new GeneratedKeyHolder()
-
-      val psc = new PreparedStatementCreator {
-        override def createPreparedStatement(connection: Connection): PreparedStatement = {
-          val ps: PreparedStatement = connection.prepareStatement(insert, Array("id"))
-          ps.setString(1, columns(0).trim)
-          ps.setString(2, columns(1).trim)
-          ps
-        }
-      }
-
-      jdbcTemplate.update(psc, keyHolder)
-      keyHolder.getKey().longValue()
-    } toList
-
-    val postIds = postLines.map { line =>
-      val columns = line.split(",")
-      val insert = "INSERT INTO post (content, author_id) VALUES (?, ?)"
-
-      val keyHolder: KeyHolder = new GeneratedKeyHolder()
-
-      val psc = new PreparedStatementCreator {
-        override def createPreparedStatement(connection: Connection): PreparedStatement = {
-          val ps: PreparedStatement = connection.prepareStatement(insert, Array("id"))
-          ps.setString(1, columns(0).trim)
-          ps.setString(2, scala.util.Random.shuffle(authorIds).head.toString)
-          ps
-        }
-      }
-
-      jdbcTemplate.update(psc, keyHolder)
-      keyHolder.getKey().longValue()
-    } toList
-
-    commentsLines.foreach { line =>
-      val columns = line.split(",")
-      val insert = "INSERT INTO comment (text, author_id, parent_comment_id, post_id) VALUES (?, ?, ?, ?)"
-      jdbcTemplate.update(insert, columns(0), columns(1), columns(2), columns(3))
-    }
-
-
+    seed()
+    val comments = commentService.findAll()
+    assertEquals(comments.size, 1000)
   }
 }
