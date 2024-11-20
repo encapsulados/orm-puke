@@ -1,6 +1,6 @@
-package com.encapsulados
+package com.encapsulados.hibernate
 
-import _root_.repository.DatabaseSeeder
+import com.encapsulados.OrmPukeApplication
 import com.encapsulados.model.{Author, Comment, Post}
 import com.encapsulados.service.{AuthorService, CommentService, PostService}
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.{AfterEach, Test}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.{ContextConfiguration, TestPropertySource}
+import repository.hibernate.DatabaseSeeder
 
 import scala.language.postfixOps
 
