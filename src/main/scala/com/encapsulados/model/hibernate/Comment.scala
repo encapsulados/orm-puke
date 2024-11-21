@@ -1,9 +1,10 @@
-package com.encapsulados.model
+package com.encapsulados.model.hibernate
 
-import jakarta.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, JoinColumn, ManyToOne, OneToMany, Table}
+import com.encapsulados.model.Author
+import jakarta.persistence._
 
-import scala.beans.BeanProperty
 import java.util
+import scala.beans.BeanProperty
 
 @Entity
 @Table(name = "comment")

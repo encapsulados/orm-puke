@@ -1,8 +1,9 @@
 package com.encapsulados.model
 
+import com.encapsulados.model.hibernate.{Comment, Post}
 import jakarta.persistence._
-import java.util
 
+import java.util
 import scala.beans.BeanProperty
 @Entity(name = "Author")
 @Table(name = "author")
@@ -21,11 +22,6 @@ class Author(@BeanProperty
 
   @OneToMany(mappedBy = "author", cascade = Array(CascadeType.ALL), orphanRemoval = true)
   var posts: util.List[Post] = new util.ArrayList[Post]()
-
-  @Version
-  @Column(name = "version", nullable = false)
-  var version: Int = _ // Hibernate/JPA handles this automatically
-
 
   @OneToMany(mappedBy = "author", cascade = Array(CascadeType.ALL), orphanRemoval = true)
   var comments: util.List[Comment] = new util.ArrayList[Comment]()

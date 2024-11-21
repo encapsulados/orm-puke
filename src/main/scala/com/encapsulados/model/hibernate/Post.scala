@@ -1,5 +1,6 @@
-package com.encapsulados.model
+package com.encapsulados.model.hibernate
 
+import com.encapsulados.model.Author
 import jakarta.persistence._
 
 import scala.beans.BeanProperty
