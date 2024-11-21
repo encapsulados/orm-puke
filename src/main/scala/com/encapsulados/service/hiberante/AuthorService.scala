@@ -1,7 +1,8 @@
 package com.encapsulados.service
 
 import com.encapsulados.model.Author
-import com.encapsulados.repository.{AuthorRepository, CustomAuthorRepository}
+import com.encapsulados.model.hibernate.Post
+import com.encapsulados.repository.{AuthorRepository, CustomAuthorRepository, PostRepository}
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,11 +21,15 @@ trait AuthorService {
 
   def findByEmailDomain(domain: String): List[Author]
 
+  def findPostsByAuthorId(id: Author): List[Post]
+
+
 }
 
 @Service
 @Transactional
 class AuthorServiceImpl(authorRepository: AuthorRepository,
+                        postRepository: PostRepository,
                         customUserRepository: CustomAuthorRepository) extends AuthorService {
 
   override def save(author: Author): Unit                      = authorRepository.save(author)
@@ -38,5 +43,7 @@ class AuthorServiceImpl(authorRepository: AuthorRepository,
   override def findAuthorByUsername(username: String): Author  = authorRepository.findByUsername(username)
 
   override def findByEmailDomain(domain: String): List[Author] = customUserRepository.findByEmailDomain(domain)
+
+  override def findPostsByAuthorId(id: Author): List[Post]     = postRepository.findByAuthor(id).asScala.toList
 
 }
