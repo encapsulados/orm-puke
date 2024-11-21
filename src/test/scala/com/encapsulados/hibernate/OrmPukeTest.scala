@@ -153,5 +153,41 @@ class OrmPukeTest extends DatabaseSeeder {
 
   }
 
+  @Test
+  def totalCommentsPerPostQueryCriteria = {
+    val zeta = new Author(username = "zeta", email = "zeta@encapsulados.io")
+    val palan = new Author(username = "palan", email = "palan@encapsulados.io")
+    val mariano = new Author(username = "mariano", email = "mariano@encapsulados.io")
+    val post = new Post(content = "Loro aprende a decir como vas? y lo ascienden a scrum master")
+    val oneComment = new Comment(text = "altos marxistas son ustedes. Aguante scrum a mi me hace feliz")
+    val anotherComment = new Comment(text = "Certificate y luego vemos de scrum")
+
+
+    authorService.save(zeta)
+    authorService.save(palan)
+    authorService.save(mariano)
+
+    zeta.posts.add(post)
+    post.author = zeta
+    post.comments.add(oneComment)
+    post.comments.add(anotherComment)
+    zeta.comments.add(oneComment)
+    palan.comments.add(anotherComment)
+    oneComment.author = zeta
+    oneComment.post = post
+    anotherComment.post = post
+    anotherComment.author = mariano
+
+    postService.save(post)
+    commentService.save(oneComment)
+    commentService.save(anotherComment)
+
+    val map: Map[Long, Long] = commentService.countCommentsPerPost()
+
+    assertTrue(map.keys.size == 1)
+    assertEquals(map(post.id), 2)
+
+  }
+
 
 }

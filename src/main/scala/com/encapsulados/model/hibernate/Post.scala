@@ -27,4 +27,6 @@ class Post (@BeanProperty
 
 
   def this() = this(null)
+
+
 }
