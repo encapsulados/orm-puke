@@ -28,11 +28,6 @@ class AuthorRepository()(implicit database: Database) {
         .as[Author]
     )
 
-  def deleteAll(): Future[Int] =
-    database.run(
-      sqlu"DELETE FROM author"
-    )
-
   def saveAll(authorData: (Username, Email)*): Future[Seq[Author]] = {
     val insertActions = authorData.map { data =>
       sqlu"INSERT INTO author (username, email) VALUES (${data._1}, ${data._2})"

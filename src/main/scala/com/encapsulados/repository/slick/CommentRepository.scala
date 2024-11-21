@@ -22,7 +22,7 @@ class CommentRepository()(implicit database: Database) {
         .head
     )
 
-  def saveAll(tuples: IndexedSeq[(String, PostId, AuthorId)]) = {
+  def saveAll(tuples: (String, PostId, AuthorId)*): Future[Seq[Comment]] = {
     val insertActions = tuples.map { data =>
       sqlu"INSERT INTO comment (text, post_id, author_id, parent_comment_id) VALUES (${data._1}, ${data._2}, ${data._3}, NULL)"
         .andThen(

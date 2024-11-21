@@ -31,7 +31,6 @@ class OrmPukeTest extends DatabaseSeeder {
     commentService.deleteAll()
   }
 
-
   @Test
   def findAll = {
     val zeta  = new Author(username = "zeta", email =  "zeta@encapsulados.io")

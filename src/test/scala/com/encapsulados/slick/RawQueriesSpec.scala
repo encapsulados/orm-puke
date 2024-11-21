@@ -1,19 +1,17 @@
 package com.encapsulados.slick
 
 import com.encapsulados.repository.slick.{AuthorRepository, CommentRepository, PostRepository}
+import org.scalatest.FutureOutcome
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AsyncWordSpecLike
-import org.scalatest.{BeforeAndAfterEach, FutureOutcome, SequentialNestedSuiteExecution}
 import repository.slick.DatabaseSeeder
 import slick.jdbc.JdbcBackend.Database
 
-import scala.concurrent.Future
 import scala.language.postfixOps
 
 class RawQueriesSpec extends AsyncWordSpecLike
   with Matchers
-  with DatabaseSeeder
-  with BeforeAndAfterEach {
+  with DatabaseSeeder {
 
   implicit val db: _root_.slick.jdbc.JdbcBackend.JdbcDatabaseDef = Database.forConfig("db")
 
@@ -27,8 +25,10 @@ class RawQueriesSpec extends AsyncWordSpecLike
     result <- super.withFixture(test).toFuture
   } yield result)
 
+
   "RawQueries" should {
-    "be able to run a raw query" in {
+
+    "find all authors" in {
       for {
         users <- authorRepository.findAll()
       } yield {
@@ -36,9 +36,9 @@ class RawQueriesSpec extends AsyncWordSpecLike
       }
     }
 
-    "find by domain" in {
+    "find authors by domain" in {
       for {
-        users <- Future.successful(println("queryando authors")).flatMap(_ => authorRepository.findByEmailDomain("encapsulados.io"))
+        users <- authorRepository.findByEmailDomain("encapsulados.io")
       } yield {
         users should have size 20
       }
@@ -52,16 +52,12 @@ class RawQueriesSpec extends AsyncWordSpecLike
                       "Aguante Jira!"                    -> palan.id,
                       "Que ganas de ser un Scrum Master" -> palan.id
                   )
-        _    <- Future.sequence(
-          posts.map { post =>
-            commentRepository.saveAll(
-              (1 to 3).map { i =>
-                (s"Comentario $i", post.id, authors.head.id)
-              }
+        firstPost = posts.head
+        _    <- commentRepository.saveAll(
+                ("Comentario 1", firstPost.id, palan.id),
+                ("Comentario 2", firstPost.id, palan.id)
             )
-          }
-        )
-        comments <- commentRepository.countByPostId(posts.head.id)
+        comments <- commentRepository.countByPostId(firstPost.id)
       } yield {
         comments shouldBe 3
       }
