@@ -3,7 +3,7 @@ package com.encapsulados.hibernate
 import com.encapsulados.OrmPukeApplication
 import com.encapsulados.model.Author
 import com.encapsulados.service.AuthorService
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.{assertEquals, assertNotEquals, assertNull}
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.{AfterEach, Test}
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,6 +35,29 @@ class OrmPukeTest extends DatabaseSeeder {
 
     val authors: Seq[Author] = authorService.findAll()
     assertEquals(authors.size, 4)
+  }
+
+  @Test
+  def findAuthorByUserName = {
+    val zeta = new Author(username = "zeta", email = "zeta@encapsulados.io")
+
+    authorService.save(zeta)
+
+    val zetaDb = authorService.findAuthorByUsername("zeta")
+
+    assertNotEquals(zeta, zetaDb) // aunque deberia serlo!!
+
+    //Nos obliga a verificar propiedad por propiedad.
+    assertEquals(zeta.username, zetaDb.username)
+    assertEquals(zeta.email, zetaDb.email)
+
+  }
+
+  @Test
+  def findNonExistantUser = {
+    val author = authorService.findAuthorByUsername("cualquiera")
+
+    assertNull(author) //El ORM a este nivel devuelve null, y no Option
   }
 
 

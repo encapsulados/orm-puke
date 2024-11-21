@@ -15,6 +15,8 @@ trait AuthorService {
   def deleteAll(): Unit
 
   def findAll(): List[Author]
+
+  def findAuthorByUsername(username: String): Author
 }
 
 @Service
@@ -29,4 +31,5 @@ class AuthorServiceImpl(authorRepository: AuthorRepository) extends AuthorServic
 
   override def findAll(): List[Author]                         = authorRepository.findAll().asScala.toList
 
+  override def findAuthorByUsername(username: String): Author  = authorRepository.findByUsername(username)
 }
