@@ -60,5 +60,17 @@ class OrmPukeTest extends DatabaseSeeder {
     assertNull(author) //El ORM a este nivel devuelve null, y no Option
   }
 
+  @Test
+  def findAuthorsByDomain = {
+    val zeta = new Author(username = "zeta", email = "zeta@encapsulados.io")
+    val palan = new Author(username = "palan", email = "palan@encapsulados.io")
+    val pedro = new Author(username = "pedro", email = "pedro@gmail.com")
+    val lucas = new Author(username = "lucas", email = "lucas@gmail.com")
+    authorService.saveAll(zeta, palan, pedro, lucas)
+
+    val authors: Seq[Author] = authorService.findByEmailDomain("encapsulados.io")
+    assertEquals(authors.size, 2)
+  }
+
 
 }
