@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 import scala.jdk.CollectionConverters._
+import scala.jdk.OptionConverters.RichOptional
 
 trait AuthorService {
   def save(user: Author): Unit
@@ -22,6 +23,8 @@ trait AuthorService {
   def findByEmailDomain(domain: String): List[Author]
 
   def findPostsByAuthorId(id: Author): List[Post]
+
+  def findById(id: Long): Option[Author]
 
 
 }
@@ -50,5 +53,7 @@ class AuthorServiceImpl(authorRepository: AuthorRepository,
   override def findByEmailDomain(domain: String): List[Author] = customUserRepository.findByEmailDomain(domain)
 
   override def findPostsByAuthorId(id: Author): List[Post]     = postRepository.findByAuthor(id).asScala.toList
+
+  override def findById(id: Long): Option[Author] = authorRepository.findById(id).toScala
 
 }

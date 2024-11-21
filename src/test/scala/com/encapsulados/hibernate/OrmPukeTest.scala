@@ -4,10 +4,11 @@ import com.encapsulados.OrmPukeApplication
 import com.encapsulados.model.hibernate.{Author, Comment, Post}
 import com.encapsulados.service.PostService
 import com.encapsulados.service.hiberante.{AuthorService, CommentService}
-import org.junit.jupiter.api.Assertions.{assertEquals, assertNotEquals, assertNull, assertTrue}
+import org.junit.jupiter.api.Assertions.{assertEquals, assertNotEquals, assertNull, assertThrows, assertTrue}
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.{AfterEach, Test}
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.{ContextConfiguration, TestPropertySource}
 import repository.hibernate.DatabaseSeeder
@@ -186,6 +187,32 @@ class OrmPukeTest extends DatabaseSeeder {
 
     assertTrue(map.keys.size == 1)
     assertEquals(map(post.id), 2)
+
+  }
+
+
+  @Test
+  def concurrentUpdateWithoutVersion(): Unit = {
+    val author = new Author(username = "zeta", email = "zeta@encapsulados.io")
+    authorService.save(author)
+
+    val tx1Author = authorService.findById(author.id).get
+    tx1Author.email = "zeta_updated_tx1@encapsulados.io"
+
+    val tx2Author = authorService.findById(author.id).get
+    tx2Author.username = "zeta_updated_tx2"
+
+    authorService.save(tx1Author)
+
+    assertThrows(classOf[ObjectOptimisticLockingFailureException], () => {
+      authorService.save(tx1Author)
+    })
+
+    val finalAuthor = authorService.findById(author.id).get
+
+    // Expect: los cambios de la transaccion 2 se pierden
+    assertEquals(finalAuthor.username, "zeta")
+    assertEquals(finalAuthor.email, "zeta_updated_tx1@encapsulados.io")
 
   }
 
