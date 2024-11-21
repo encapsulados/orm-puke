@@ -14,29 +14,9 @@ class AuthorRepository()(implicit database: Database) {
 
   implicit val getSupplierResult: GetResult[Author] = GetResult(r => Author(r.nextInt, r.nextString, r.nextString))
 
-  def findAll(): Future[Vector[Author]] =
-    database.run(
-      sql"SELECT id, username, email FROM author"
-        .as[Author]
-    )
+  def findAll(): Future[Vector[Author]] = ???
 
-  def findByEmailDomain(domain: String): Future[Vector[Author]] =
-    database.run(
-      sql"""
-            SELECT id, username, email FROM author WHERE email LIKE ${"%@" + domain}
-        """
-        .as[Author]
-    )
+  def findByEmailDomain(domain: String): Future[Vector[Author]] = ???
 
-  def saveAll(authorData: (Username, Email)*): Future[Seq[Author]] = {
-    val insertActions = authorData.map { data =>
-      sqlu"INSERT INTO author (username, email) VALUES (${data._1}, ${data._2})"
-        .andThen(
-          sql"SELECT id, username, email FROM author WHERE username = ${data._1} AND email = ${data._2}"
-            .as[Author].head
-        )
-    }
-
-    database.run(DBIO.sequence(insertActions).transactionally)
-  }
+  def saveAll(authorData: (Username, Email)*): Future[Seq[Author]] = ???
 }

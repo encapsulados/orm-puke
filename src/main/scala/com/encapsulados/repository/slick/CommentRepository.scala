@@ -15,22 +15,8 @@ class CommentRepository()(implicit database: Database) {
 
   implicit val getSupplierResult: GetResult[Comment] = GetResult(r => Comment(r.nextLong(), r.nextString, r.nextLong(), r.nextLong(), r.nextLong()))
 
-  def countByPostId(postId: Long): Future[Int] =
-    database.run(
-      sql"SELECT COUNT(*) FROM comment WHERE post_id = $postId"
-        .as[Int]
-        .head
-    )
+  def countByPostId(postId: Long): Future[Int] = ???
 
-  def saveAll(tuples: (String, PostId, AuthorId)*): Future[Seq[Comment]] = {
-    val insertActions = tuples.map { data =>
-      sqlu"INSERT INTO comment (text, post_id, author_id, parent_comment_id) VALUES (${data._1}, ${data._2}, ${data._3}, NULL)"
-        .andThen(
-          sql"SELECT id, text, author_id, parent_comment_id, post_id FROM comment WHERE text = ${data._1} AND post_id = ${data._2} AND author_id = ${data._3}"
-            .as[Comment].head
-        )
-    }
-    database.run(DBIO.sequence(insertActions).transactionally)
-  }
+  def saveAll(tuples: (String, PostId, AuthorId)*): Future[Seq[Comment]] = ???
 
 }
