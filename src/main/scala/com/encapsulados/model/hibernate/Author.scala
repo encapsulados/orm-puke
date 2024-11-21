@@ -22,6 +22,9 @@ class Author(@BeanProperty
   @OneToMany(mappedBy = "author", cascade = Array(CascadeType.ALL), orphanRemoval = true)
   var posts: util.List[Post] = new util.ArrayList[Post]()
 
+  @Version
+  @Column(name = "version", nullable = false)
+  var version: Int = _ // Hibernate/JPA handles this automatically
 
 
   @OneToMany(mappedBy = "author", cascade = Array(CascadeType.ALL), orphanRemoval = true)

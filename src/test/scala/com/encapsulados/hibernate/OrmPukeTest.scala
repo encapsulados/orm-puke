@@ -18,7 +18,7 @@ import scala.language.postfixOps
 @TestPropertySource(locations = Array("classpath:application.properties"))
 class OrmPukeTest extends DatabaseSeeder {
   @Autowired
-  var userService: AuthorService      = _
+  var authorService: AuthorService      = _
   @Autowired
   var postService: PostService        = _
   @Autowired
@@ -26,7 +26,7 @@ class OrmPukeTest extends DatabaseSeeder {
 
   @AfterEach
   def cleanDatabase(): Unit = {
-    userService.deleteAll()
+    authorService.deleteAll()
     postService.deleteAll()
     commentService.deleteAll()
   }
@@ -37,9 +37,9 @@ class OrmPukeTest extends DatabaseSeeder {
     val palan = new Author(username = "palan", email = "palan@encapsulados.io")
     val pedro = new Author(username = "pedro", email = "pedro@gmail.com")
     val lucas = new Author(username = "lucas", email = "lucas@gmail.com")
-    userService.saveAll(zeta, palan, pedro, lucas)
+    authorService.saveAll(zeta, palan, pedro, lucas)
 
-    val authors: Seq[Author] = userService.findAll()
+    val authors: Seq[Author] = authorService.findAll()
     assertEquals(authors.size, 4)
   }
 
@@ -49,9 +49,9 @@ class OrmPukeTest extends DatabaseSeeder {
     val palan = new Author(username = "palan", email = "palan@encapsulados.io")
     val pedro = new Author(username = "pedro", email = "pedro@gmail.com")
     val lucas = new Author(username = "lucas", email = "lucas@gmail.com")
-    userService.saveAll(zeta, palan, pedro, lucas)
+    authorService.saveAll(zeta, palan, pedro, lucas)
 
-    val authors: Seq[Author] = userService.findByEmailDomain("encapsulados.io")
+    val authors: Seq[Author] = authorService.findByEmailDomain("encapsulados.io")
     assertEquals(authors.size, 2)
   }
 
@@ -63,11 +63,11 @@ class OrmPukeTest extends DatabaseSeeder {
     zeta.posts.add(post)
 
     post.author = zeta
-    userService.save(zeta)
+    authorService.save(zeta)
     postService.save(post)
 
-    assertEquals(userService.findPostsByAuthorId(zeta).size, 1)
-    assertEquals(userService.findPostsByAuthorId(zeta).head.content, "test content")
+    assertEquals(authorService.findPostsByAuthorId(zeta).size, 1)
+    assertEquals(authorService.findPostsByAuthorId(zeta).head.content, "test content")
   }
 
   @Test
@@ -80,9 +80,9 @@ class OrmPukeTest extends DatabaseSeeder {
     val anotherComment = new Comment(text = "Certificate y luego vemos de scrum")
 
 
-    userService.save(zeta)
-    userService.save(palan)
-    userService.save(mariano)
+    authorService.save(zeta)
+    authorService.save(palan)
+    authorService.save(mariano)
 
     zeta.posts.add(post)
     post.author = zeta
@@ -101,6 +101,32 @@ class OrmPukeTest extends DatabaseSeeder {
 
     assertEquals(commentService.findByPost(post).size, 2)
     assertEquals(commentService.findByPost(post).size, commentService.countByPostId(post))
+  }
 
+  @Test
+  def concurrentUpdateWithoutVersion(): Unit = {
+    // Step 1: Create and save an Author
+    val author = new Author(username = "zeta", email = "zeta@encapsulados.io")
+    authorService.save(author)
+
+    // Step 2: Simulate first transaction fetching and modifying the Author
+    val tx1Author = authorService.findById(author.id).get
+    tx1Author.email = "zeta_updated_tx1@encapsulados.io"
+
+    // Step 3: Simulate second transaction fetching and modifying the same Author
+    val tx2Author = authorService.findById(author.id).get
+    tx2Author.username = "zeta_updated_tx2"
+
+    // Step 4: Save changes from Transaction 1
+    authorService.save(tx1Author)
+
+    // Step 5: Save changes from Transaction 2 (overwrites changes from Transaction 1)
+    authorService.save(tx2Author)
+
+    val finalAuthor = authorService.findById(author.id).get
+
+    // Expect: The changes from Transaction 1 are lost
+    assertEquals(finalAuthor.username, "zeta_updated_tx2")
+    assertEquals(finalAuthor.email, "zeta_updated_tx1@encapsulados.io") //this should be the same as tx1Author.email
   }
 }
