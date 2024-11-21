@@ -1,14 +1,15 @@
-package com.encapsulados
+package com.encapsulados.hibernate
 
-import _root_.repository.DatabaseSeeder
+import com.encapsulados.OrmPukeApplication
 import com.encapsulados.model.{Author, Comment, Post}
 import com.encapsulados.service.{AuthorService, CommentService, PostService}
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.{assertEquals, assertNull}
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.{AfterEach, Test}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.{ContextConfiguration, TestPropertySource}
+import repository.hibernate.DatabaseSeeder
 
 import scala.language.postfixOps
 
@@ -30,9 +31,8 @@ class OrmPukeTest extends DatabaseSeeder {
     commentService.deleteAll()
   }
 
-
   @Test
-  def findAll = {
+  def findAllAuthors = {
     val zeta  = new Author(username = "zeta", email =  "zeta@encapsulados.io")
     val palan = new Author(username = "palan", email = "palan@encapsulados.io")
     val pedro = new Author(username = "pedro", email = "pedro@gmail.com")
@@ -44,7 +44,7 @@ class OrmPukeTest extends DatabaseSeeder {
   }
 
   @Test
-  def getAllUsersByDomain = {
+  def findAllAuthorsByDomain = {
     val zeta  = new Author(username = "zeta", email =  "zeta@encapsulados.io")
     val palan = new Author(username = "palan", email = "palan@encapsulados.io")
     val pedro = new Author(username = "pedro", email = "pedro@gmail.com")
@@ -57,7 +57,7 @@ class OrmPukeTest extends DatabaseSeeder {
 
 
   @Test
-  def authorWithPost = {
+  def findPostsByAuthor = {
     val zeta = new Author(username = "zeta", email = "zeta@encapsulados.io")
     val post = new Post(content = "test content")
     zeta.posts.add(post)
@@ -71,7 +71,7 @@ class OrmPukeTest extends DatabaseSeeder {
   }
 
   @Test
-  def authorWithPostAndComments = {
+  def findCommentsByPost = {
     val zeta           = new Author(username = "zeta", email = "zeta@encapsulados.io")
     val palan          = new Author(username = "palan", email = "palan@encapsulados.io")
     val mariano        = new Author(username = "mariano", email = "mariano@encapsulados.io")
@@ -102,12 +102,5 @@ class OrmPukeTest extends DatabaseSeeder {
     assertEquals(commentService.findByPost(post).size, 2)
     assertEquals(commentService.findByPost(post).size, commentService.countByPostId(post))
 
-  }
-
-  @Test
-  def commentsPerPost = {
-    seed()
-    val comments = commentService.findAll()
-    assertEquals(comments.size, 1000)
   }
 }

@@ -8,6 +8,8 @@ libraryDependencies += "com.h2database" % "h2" % "2.1.214"
 libraryDependencies += "org.springframework.boot" % "spring-boot-starter-test" % "3.0.4" % Test
 libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.33"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.11"
+libraryDependencies += "com.typesafe.slick" %% "slick" % "3.5.2"
+libraryDependencies += "com.typesafe.slick" %% "slick-hikaricp" % "3.5.2"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % Test
 libraryDependencies += "org.springframework.boot" % "spring-boot-starter-test" % "3.0.4" % Test
 
@@ -15,3 +17,5 @@ lazy val root = (project in file("."))
   .settings(
     name := "OrmPuke"
   )
+
+Test / parallelExecution := false
