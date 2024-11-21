@@ -1,11 +1,11 @@
-package com.encapsulados.repository
+package com.encapsulados.repository.hibernate
 
-import com.encapsulados.model.Author
+import com.encapsulados.model.hibernate.Author
+import jakarta.persistence.criteria._
 import jakarta.persistence.{EntityManager, PersistenceContext}
+import org.springframework.stereotype.Repository
 
 import scala.jdk.CollectionConverters._
-import jakarta.persistence.criteria._
-import org.springframework.stereotype.Repository
 
 @Repository
 class CustomAuthorRepository {

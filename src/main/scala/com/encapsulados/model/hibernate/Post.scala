@@ -1,10 +1,9 @@
 package com.encapsulados.model.hibernate
 
-import com.encapsulados.model.Author
 import jakarta.persistence._
 
-import scala.beans.BeanProperty
 import java.util
+import scala.beans.BeanProperty
 
 @Entity(name= "Post")
 @Table(name = "post")

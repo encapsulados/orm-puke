@@ -1,6 +1,5 @@
 package com.encapsulados.model.hibernate
 
-import com.encapsulados.model.Author
 import jakarta.persistence._
 
 import java.util

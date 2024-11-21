@@ -1,8 +1,8 @@
-package com.encapsulados.service
+package com.encapsulados.service.hiberante
 
-import com.encapsulados.model.Author
-import com.encapsulados.model.hibernate.Post
-import com.encapsulados.repository.{AuthorRepository, CustomAuthorRepository, PostRepository}
+import com.encapsulados.model.hibernate.{Author, Post}
+import com.encapsulados.repository.hibernate.{AuthorRepository, CustomAuthorRepository, PostRepository}
+import org.hibernate.Hibernate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -38,7 +38,12 @@ class AuthorServiceImpl(authorRepository: AuthorRepository,
 
   override def deleteAll(): Unit                               = authorRepository.deleteAll()
 
-  override def findAll(): List[Author]                         = authorRepository.findAll().asScala.toList
+  override def findAll(): List[Author]                         = {
+    val authors  = authorRepository.findAll()
+    authors.forEach(author => Hibernate.initialize(author.comments))
+    authors.asScala.toList
+
+  }
 
   override def findAuthorByUsername(username: String): Author  = authorRepository.findByUsername(username)
 

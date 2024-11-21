@@ -1,7 +1,7 @@
 package com.encapsulados.service
 
 import com.encapsulados.model.hibernate.Post
-import com.encapsulados.repository.PostRepository
+import com.encapsulados.repository.hibernate.PostRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

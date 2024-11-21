@@ -1,10 +1,8 @@
-package com.encapsulados.repository
+package com.encapsulados.repository.hibernate
 
-import com.encapsulados.model.Author
+import com.encapsulados.model.hibernate.Author
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-
-import java.util.Optional
 
 @Repository
 trait AuthorRepository extends JpaRepository[Author,Long] {

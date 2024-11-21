@@ -1,6 +1,5 @@
-package com.encapsulados.model
+package com.encapsulados.model.hibernate
 
-import com.encapsulados.model.hibernate.{Comment, Post}
 import jakarta.persistence._
 
 import java.util

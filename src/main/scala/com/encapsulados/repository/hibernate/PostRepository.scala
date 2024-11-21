@@ -1,7 +1,6 @@
-package com.encapsulados.repository
+package com.encapsulados.repository.hibernate
 
-import com.encapsulados.model.Author
-import com.encapsulados.model.hibernate.Post
+import com.encapsulados.model.hibernate.{Author, Post}
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
